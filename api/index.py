@@ -77,7 +77,7 @@ async def root():
 
 
 @app.get("/{id}")
-async def note(id: str, redis: Redis = Depends(get_redis)):
+async def note(id: str, redis: Redis = Depends(get_redis, use_cache=True)):
     content = (raw := await redis.get(f"note:{id}")) and raw.decode()
 
     return render(
@@ -96,7 +96,9 @@ async def note(id: str, redis: Redis = Depends(get_redis)):
 
 
 @app.post("/{id}")
-async def note_post(id: str, request: Request, redis: Redis = Depends(get_redis)):
+async def note_post(
+    id: str, request: Request, redis: Redis = Depends(get_redis, use_cache=True)
+):
     content = (await request.body()).decode()
     await redis.set(f"note:{id}", content)
     return ""
