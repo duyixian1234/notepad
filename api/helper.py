@@ -5,12 +5,19 @@ from fastapi.responses import HTMLResponse
 from html_dsl.common import *
 from html_dsl.elements import BaseHtmlElement
 
-script = """function save() {
+script = """
+function save() {
   fetch(location.toString(), {
     method: "POST",
     body: document.getElementById("editor").value,
   });
-}"""
+}
+document.addEventListener('keydown', function(event) {
+    if (event.ctrlKey && event.key === 's') {
+        save();
+        event.preventDefault();
+});
+"""
 
 head = HEAD[
     META['charset="utf-8"'],
