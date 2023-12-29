@@ -1,6 +1,6 @@
 import os
 
-from redis import Redis
+from redis.asyncio import Redis
 
 
 async def get_redis():
