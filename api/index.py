@@ -44,7 +44,7 @@ def render(element: BaseHtmlElement):
     return HTMLResponse(str_without_blanks(element))
 
 
-def get_redis():
+async def get_redis():
     yield Redis(
         host=os.getenv("REDIS_URL"),
         port=37513,
