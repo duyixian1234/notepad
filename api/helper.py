@@ -27,55 +27,22 @@ head = HEAD[
 ]
 
 
-def str_without_blanks(element: BaseHtmlElement):
-    blank = ""
-    attrs = (
-        " {}".format(
-            " ".join(
-                f'{key.replace("_", "-")}="{str(element.attrs[key])}"'
-                for key in element.attrs
-            )
-        )
-        if element.attrs
-        else ""
-    )
-    children = "\n".join(
-        str_without_blanks(child)
-        if isinstance(child, BaseHtmlElement)
-        else blank + str(child)
-        for child in element.children
-    )
-    if element.single:
-        return "{blank}<{name}{attrs}>".format(
-            blank=blank, name=element.name, attrs=attrs
-        )
-    if element.no_content:
-        return "{blank}<{name}{attrs}/>".format(
-            blank=blank, name=element.name, attrs=attrs
-        )
-    return "{blank}<{name}{attrs}>\n{children}\n{blank}</{name}>".format(
-        blank=blank, name=element.name, attrs=attrs, children=children
-    )
-
-
 def render(element: BaseHtmlElement):
-    return HTMLResponse(str_without_blanks(element))
+    return HTMLResponse(str(element))
 
 
 def render_note(content: str):
     return render(
-        HTML(lang="en")[
-            head,
-            BODY[
-                BUTTON(onClick="save()")["Save"],
-                TEXTAREA(
-                    id="editor",
-                    placeholder="input text here",
-                    style="width:100%;height:100%;font-size:20px;",
-                )[content or "input text here"],
-            ],
-        ]
+        HTML(lang="en")[head, BODY[BUTTON(onClick="save()")["Save"], editor(content)]]
     )
+
+
+def editor(content):
+    return TEXTAREA(
+        id="editor",
+        placeholder="input text here",
+        style="width:100%;height:100%;font-size:20px;",
+    )[content or "input text here"]
 
 
 def gen_note_id():
