@@ -16,7 +16,7 @@ document.addEventListener('keydown', function(event) {
     if (event.ctrlKey && event.key === 's') {
         save();
         event.preventDefault();
-});
+}});
 """
 
 head = HEAD[
